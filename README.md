@@ -447,39 +447,6 @@ Use handoff_to_claude_dev with the prototype from generate_prototype
 
 ---
 
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**Issue:** "API key not found"
-- **Solution:** Check `.env` file has `V0_API_KEY=your_key`
-
-**Issue:** "Tool not found in Claude"
-- **Solution:** Run `claude mcp list` and `npm run verify:claude-code`
-
-**Issue:** "Weak input - low confidence" (Step 1)
-- **Solution:** Add more details: product name, screens needed, platform (web/mobile)
-
-**Issue:** "Partial success - only 2/5 screens generated" (Step 2)
-- **Solution:** This is acceptable. Regenerate missing screens or proceed with partial results
-
-**Issue:** "Rate limited"
-- **Solution:** Wait and retry. Tool will show retry-after time
-
----
-
-## 💖 Support
-
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support-yellow?style=for-the-badge&logo=buy-me-a-coffee)](https://coff.ee/hellolucky)
-
----
-
-## 📄 License
-
-MIT
-
----
-
 ## 🔗 Links
 
 - [v0 Model API Docs](https://vercel.com/docs/v0/model-api)
