@@ -1,14 +1,18 @@
 {
-  "name": "v0-mcp-node",
+  "name": "v0-platform-mcp",
   "version": "1.0.0",
   "description": "Vercel v0 MCP Server using Node.js and TypeScript - Generate UI components through Claude Code",
   "main": "dist/main.js",
   "bin": {
-    "v0-mcp": "./dist/main.js"
+    "v0-platform-mcp": "./dist/main.js"
   },
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && chmod +x dist/main.js",
+    "prepublishOnly": "npm run clean && npm run build",
     "start": "node dist/main.js",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'tsx' src/main.ts",
     "lint": "eslint . --ext .ts",

@@ -1,6 +1,8 @@
-# v0-mcp
+# v0-platform-mcp
 
 Vercel v0 MCP Server for Claude Code - Rapid multi-screen UI prototyping through the Model Context Protocol.
+
+[![npm version](https://badge.fury.io/js/v0-platform-mcp.svg)](https://www.npmjs.com/package/v0-platform-mcp)
 
 > ✨ Built with Claude Code and Gemini CLI using Vibe Coding methodology
 
@@ -25,22 +27,24 @@ Vercel v0 MCP Server for Claude Code - Rapid multi-screen UI prototyping through
 ## 🚀 Quick Start
 
 ```bash
-# 1. Install
+# 1. Get your v0 API key from https://vercel.com/docs/v0/model-api
+
+# 2. Add to Claude Code
+claude mcp add v0-platform-mcp --env V0_API_KEY=YOUR_KEY -- npx v0-platform-mcp
+
+# That's it! The server will auto-install and run via npx
+```
+
+### Alternative: Local Development
+
+```bash
+# Clone and build locally
 git clone <repository-url> && cd v0-mcp
 npm install
-
-# 2. Setup environment
-npm run setup
-# Edit .env with your V0_API_KEY from https://vercel.com/docs/v0/model-api
-
-# 3. Build
 npm run build
 
-# 4. Add to Claude Code
-claude mcp add v0-mcp --env V0_API_KEY=$(grep V0_API_KEY .env | cut -d '=' -f2) -- node $(pwd)/dist/main.js
-
-# 5. Verify
-npm run verify:claude-code
+# Add to Claude Code (local)
+claude mcp add v0-platform-mcp --env V0_API_KEY=YOUR_KEY -- node $(pwd)/dist/main.js
 ```
 
 ---
@@ -234,10 +238,9 @@ Implementation Rules:
 
 ### Claude Code Setup
 
-**Method 1: CLI (Recommended)**
+**Method 1: npx (Recommended)**
 ```bash
-cd /path/to/v0-mcp
-claude mcp add v0-mcp --env V0_API_KEY=your_key -- node $(pwd)/dist/main.js
+claude mcp add v0-platform-mcp --env V0_API_KEY=your_key -- npx v0-platform-mcp
 ```
 
 **Method 2: Manual Configuration**
@@ -246,10 +249,10 @@ Edit `~/.claude.json`:
 ```json
 {
   "mcpServers": {
-    "v0-mcp": {
+    "v0-platform-mcp": {
       "type": "stdio",
-      "command": "node",
-      "args": ["/absolute/path/to/v0-mcp/dist/main.js"],
+      "command": "npx",
+      "args": ["v0-platform-mcp"],
       "env": {
         "V0_API_KEY": "your_v0_api_key_here"
       }
@@ -258,14 +261,19 @@ Edit `~/.claude.json`:
 }
 ```
 
+**Method 3: Local Development**
+```bash
+cd /path/to/v0-mcp
+claude mcp add v0-platform-mcp --env V0_API_KEY=your_key -- node $(pwd)/dist/main.js
+```
+
 ### Verification
 
 ```bash
 # List MCP servers
 claude mcp list
 
-# Verify setup
-npm run verify:claude-code
+# Expected: v0-platform-mcp should be listed
 ```
 
 **Expected tools in Claude:**
@@ -385,9 +393,9 @@ Edit `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
-    "v0-mcp": {
-      "command": "node",
-      "args": ["/path/to/v0-mcp/dist/main.js"],
+    "v0-platform-mcp": {
+      "command": "npx",
+      "args": ["v0-platform-mcp"],
       "env": {"V0_API_KEY": "your_key"}
     }
   }
@@ -400,9 +408,9 @@ Add to Cursor MCP configuration:
 ```json
 {
   "mcpServers": {
-    "v0-mcp": {
-      "command": "node",
-      "args": ["/path/to/v0-mcp/dist/main.js"],
+    "v0-platform-mcp": {
+      "command": "npx",
+      "args": ["v0-platform-mcp"],
       "env": {"V0_API_KEY": "your_key"}
     }
   }
