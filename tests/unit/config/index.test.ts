@@ -43,7 +43,7 @@ describe('Configuration', () => {
       expect(config.v0.baseUrl).toBe('https://api.v0.dev/v1');
       expect(config.v0.defaultModel).toBe('v0-1.5-md');
       expect(config.v0.timeout).toBe(60000);
-      expect(config.mcp.serverName).toBe('v0-mcp');
+      expect(config.mcp.serverName).toBe('v0-platform-mcp');
       expect(config.mcp.version).toBe('1.0.0');
       expect(config.logging.level).toBe('info');
     });
@@ -185,7 +185,7 @@ describe('Configuration', () => {
       expect(config.v0.baseUrl).toBe('https://api.v0.dev/v1');
       expect(config.v0.defaultModel).toBe('v0-1.5-md');
       expect(config.v0.timeout).toBe(60000);
-      expect(config.mcp.serverName).toBe('v0-mcp');
+      expect(config.mcp.serverName).toBe('v0-platform-mcp');
       expect(config.mcp.version).toBe('1.0.0');
       expect(config.logging.level).toBe('info');
     });

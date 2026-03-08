@@ -2,7 +2,7 @@
 
 /**
  * Claude Code Setup Verification Script
- * Helps users verify their v0-mcp configuration for Claude Code
+ * Helps users verify their v0-platform-mcp configuration for Claude Code
  */
 
 import fs from 'fs';
@@ -47,7 +47,7 @@ function getConfigPaths() {
 }
 
 function verifySetup() {
-  console.log('🔍 Verifying v0-mcp setup for Claude Code...\n');
+  console.log('🔍 Verifying v0-platform-mcp setup for Claude Code...\n');
 
   // Check if build exists
   const distPath = path.join(process.cwd(), 'dist', 'main.js');
@@ -81,20 +81,20 @@ function verifySetup() {
       if (jsonCheck.valid) {
         console.log('   ✅ Valid JSON format');
 
-        // Check for v0-mcp server configuration in global mcpServers
-        if (jsonCheck.content.mcpServers && jsonCheck.content.mcpServers['v0-mcp']) {
-          console.log('   ✅ v0-mcp server configured (global)');
+        // Check for v0-platform-mcp server configuration in global mcpServers
+        if (jsonCheck.content.mcpServers && jsonCheck.content.mcpServers['v0-platform-mcp']) {
+          console.log('   ✅ v0-platform-mcp server configured (global)');
 
-          const serverConfig = jsonCheck.content.mcpServers['v0-mcp'];
+          const serverConfig = jsonCheck.content.mcpServers['v0-platform-mcp'];
           configFound = validateServerConfig(serverConfig);
         }
         // Check for project-specific configuration
         else if (jsonCheck.content.projects) {
           let foundInProject = false;
           for (const [projectPath, projectConfig] of Object.entries(jsonCheck.content.projects)) {
-            if (projectConfig.mcpServers && projectConfig.mcpServers['v0-mcp']) {
-              console.log(`   ✅ v0-mcp server configured (project-specific: ${projectPath})`);
-              const serverConfig = projectConfig.mcpServers['v0-mcp'];
+            if (projectConfig.mcpServers && projectConfig.mcpServers['v0-platform-mcp']) {
+              console.log(`   ✅ v0-platform-mcp server configured (project-specific: ${projectPath})`);
+              const serverConfig = projectConfig.mcpServers['v0-platform-mcp'];
               configFound = validateServerConfig(serverConfig);
               foundInProject = true;
               break;
@@ -105,9 +105,9 @@ function verifySetup() {
           if (!foundInProject) {
             const cwdPath = process.cwd();
             for (const [key, value] of Object.entries(jsonCheck.content)) {
-              if (key.startsWith('/') && value.mcpServers && value.mcpServers['v0-mcp']) {
-                console.log(`   ✅ v0-mcp server configured (project-specific: ${key})`);
-                const serverConfig = value.mcpServers['v0-mcp'];
+              if (key.startsWith('/') && value.mcpServers && value.mcpServers['v0-platform-mcp']) {
+                console.log(`   ✅ v0-platform-mcp server configured (project-specific: ${key})`);
+                const serverConfig = value.mcpServers['v0-platform-mcp'];
                 configFound = validateServerConfig(serverConfig);
                 foundInProject = true;
                 break;
@@ -116,10 +116,10 @@ function verifySetup() {
           }
 
           if (!foundInProject) {
-            console.log('   ❌ v0-mcp server not found in configuration');
+            console.log('   ❌ v0-platform-mcp server not found in configuration');
           }
         } else {
-          console.log('   ❌ v0-mcp server not found in configuration');
+          console.log('   ❌ v0-platform-mcp server not found in configuration');
         }
       } else {
         console.log(`   ❌ Invalid JSON: ${jsonCheck.error}`);
@@ -174,12 +174,12 @@ function verifySetup() {
   
   console.log('\n🎯 Summary:');
   if (configFound) {
-    console.log('✅ v0-mcp configuration found and appears valid');
+    console.log('✅ v0-platform-mcp configuration found and appears valid');
     console.log('\n📋 Next steps:');
     console.log('1. Verify connection with: claude mcp list');
     console.log('2. Test the server with a healthcheck in Claude Code');
   } else {
-    console.log('❌ No valid v0-mcp configuration found');
+    console.log('❌ No valid v0-platform-mcp configuration found');
     console.log('\n📋 Next steps:');
     console.log('1. Create a configuration file at one of these locations:');
     configPaths.forEach(p => console.log(`   - ${p}`));

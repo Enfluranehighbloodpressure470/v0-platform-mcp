@@ -1,5 +1,5 @@
 /**
- * Type definitions for v0-mcp
+ * Type definitions for v0-platform-mcp
  */
 
 import { z } from 'zod';

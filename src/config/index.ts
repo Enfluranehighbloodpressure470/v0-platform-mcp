@@ -1,5 +1,5 @@
 /**
- * Configuration management for v0-mcp
+ * Configuration management for v0-platform-mcp
  */
 
 import { config as dotenvConfig } from 'dotenv';
@@ -37,7 +37,7 @@ export const config: AppConfig = {
     timeout: parseInt(getOptionalEnv('V0_TIMEOUT', '60000'), 10),
   },
   mcp: {
-    serverName: getOptionalEnv('MCP_SERVER_NAME', 'v0-mcp'),
+    serverName: getOptionalEnv('MCP_SERVER_NAME', 'v0-platform-mcp'),
     version: getOptionalEnv('MCP_SERVER_VERSION', '1.0.0'),
   },
   logging: {

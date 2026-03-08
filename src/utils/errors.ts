@@ -1,5 +1,5 @@
 /**
- * Enhanced error handling utilities for v0-mcp
+ * Enhanced error handling utilities for v0-platform-mcp
  */
 
 import OpenAI from 'openai';

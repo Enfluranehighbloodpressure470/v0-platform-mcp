@@ -1,7 +1,7 @@
-# Ralph Progress Log - v0-mcp Prototype Workflow
+# Ralph Progress Log - v0-platform-mcp Prototype Workflow
 
 ## Codebase Patterns
-- v0-mcp uses TypeScript 5.4+ with strict mode enabled (ES2022, NodeNext modules)
+- v0-platform-mcp uses TypeScript 5.4+ with strict mode enabled (ES2022, NodeNext modules)
 - ES Modules throughout (type: "module" in package.json)
 - Zod schemas validate all MCP tool parameters (see src/types/index.ts)
   - Pattern: Define schema → export type via z.infer

@@ -1,5 +1,5 @@
 /**
- * Structured logging utility for v0-mcp
+ * Structured logging utility for v0-platform-mcp
  */
 
 import winston from 'winston';
@@ -26,7 +26,7 @@ export const logger = winston.createLogger({
         timestamp,
         level: level.toUpperCase(),
         message,
-        service: 'v0-mcp',
+        service: 'v0-platform-mcp',
         ...meta,
       };
 

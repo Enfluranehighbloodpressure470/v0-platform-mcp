@@ -227,13 +227,13 @@
   {
     "id": "US-016",
     "title": "Register 3 Tools with MCP Server",
-    "description": "As a developer, I want all 3 prototype workflow tools registered in the v0-mcp server, so that they appear in Claude Code's tool list and can be invoked.\n\nMCP integration enabler.",
+    "description": "As a developer, I want all 3 prototype workflow tools registered in the v0-platform-mcp server, so that they appear in Claude Code's tool list and can be invoked.\n\nMCP integration enabler.",
     "acceptanceCriteria": [
-      "Given the v0-mcp server starts, When tool registration runs, Then 3 new tools are registered: prepare_prototype_context, generate_prototype, handoff_to_claude_dev",
+      "Given the v0-platform-mcp server starts, When tool registration runs, Then 3 new tools are registered: prepare_prototype_context, generate_prototype, handoff_to_claude_dev",
       "Given tools are registered, When a user opens Claude Code, Then the 3 tools appear in the available tools list",
       "Given a user invokes a tool, When the MCP server receives the request, Then the tool handler executes correctly",
       "Must register all 3 tools with proper metadata and descriptions",
-      "Should follow existing v0-mcp tool registration patterns"
+      "Should follow existing v0-platform-mcp tool registration patterns"
     ],
     "priority": "P0",
     "passes": true,

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * v0-mcp: MCP Server for Vercel v0 API Integration
+ * v0-platform-mcp: MCP Server for Vercel v0 API Integration
  * Provides AI-powered UI generation tools for Claude Code
  */
 
@@ -99,7 +99,7 @@ class V0McpServer {
         availableTools: this.v0Tools.listTools().length,
       });
       
-      console.error(`✅ v0-mcp server started successfully`);
+      console.error(`✅ v0-platform-mcp server started successfully`);
       console.error(`📡 Server: ${config.mcp.serverName} v${config.mcp.version}`);
       console.error(`🎨 Available tools: ${this.v0Tools.listTools().length}`);
       console.error(`🔗 Base URL: ${config.v0.baseUrl}`);
@@ -115,7 +115,7 @@ class V0McpServer {
    */
   async shutdown(): Promise<void> {
     logServerEvent('server_shutting_down');
-    console.error('🛑 Shutting down v0-mcp server...');
+    console.error('🛑 Shutting down v0-platform-mcp server...');
     
     try {
       await this.server.close();
@@ -158,7 +158,7 @@ async function main(): Promise<void> {
   try {
     await server.start();
   } catch (error) {
-    console.error('❌ Failed to start v0-mcp server:', error);
+    console.error('❌ Failed to start v0-platform-mcp server:', error);
     process.exit(1);
   }
 }

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Basic functionality test for v0-mcp
+ * Basic functionality test for v0-platform-mcp
  * Tests core functionality without requiring external API calls
  */
 
@@ -12,7 +12,7 @@ import { V0Tools } from '../dist/mcp/tools.js';
 import { logger } from '../dist/utils/logger.js';
 
 async function testBasicFunctionality() {
-  console.log('🧪 Testing v0-mcp basic functionality...\n');
+  console.log('🧪 Testing v0-platform-mcp basic functionality...\n');
   
   try {
     // Test 1: Tools listing

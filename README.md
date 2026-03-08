@@ -39,7 +39,7 @@ claude mcp add v0-platform-mcp --env V0_API_KEY=YOUR_KEY -- npx v0-platform-mcp
 
 ```bash
 # Clone and build locally
-git clone <repository-url> && cd v0-mcp
+git clone <repository-url> && cd v0-platform-mcp
 npm install
 npm run build
 
@@ -263,7 +263,7 @@ Edit `~/.claude.json`:
 
 **Method 3: Local Development**
 ```bash
-cd /path/to/v0-mcp
+cd /path/to/v0-platform-mcp
 claude mcp add v0-platform-mcp --env V0_API_KEY=your_key -- node $(pwd)/dist/main.js
 ```
 
@@ -368,7 +368,7 @@ Natural Language Description
 
 ```
 ┌─────────────────────────────────────────────┐
-│              v0-mcp Server                  │
+│         v0-platform-mcp Server               │
 ├─────────────────────────────────────────────┤
 │                                             │
 │  Tools                                      │
