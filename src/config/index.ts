@@ -5,8 +5,9 @@
 import { config as dotenvConfig } from 'dotenv';
 import { AppConfig, V0Model } from '../types/index.js';
 
-// Load environment variables
-dotenvConfig();
+// Load environment variables from .env file if it exists
+// This is optional - environment variables can also be passed directly (e.g., via npx --env)
+dotenvConfig({ path: '.env' });
 
 /**
  * Get required environment variable or throw error

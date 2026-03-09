@@ -5,6 +5,7 @@
  * Provides AI-powered UI generation tools for Claude Code
  */
 
+import { fileURLToPath } from 'url';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import {
@@ -164,7 +165,10 @@ async function main(): Promise<void> {
 }
 
 // Start the server if this file is executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Use proper path comparison for ESM modules to work across all environments (npx, npm, direct execution)
+const isMainModule = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+
+if (isMainModule) {
   main().catch((error) => {
     console.error('❌ Fatal error:', error);
     process.exit(1);
