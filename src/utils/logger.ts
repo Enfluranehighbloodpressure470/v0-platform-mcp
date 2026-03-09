@@ -39,20 +39,21 @@ export const logger = winston.createLogger({
   ),
   transports: [
     new winston.transports.Console({
+      stderrLevels: ['error', 'warn', 'info', 'debug'], // Write all logs to stderr for MCP stdio compatibility
       format: winston.format.combine(
         winston.format.colorize(),
         winston.format.simple(),
         winston.format.printf(({ timestamp, level, message, stack, ...meta }) => {
           let logMessage = `${timestamp} [${level}]: ${message}`;
-          
+
           if (Object.keys(meta).length > 0) {
             logMessage += ` ${JSON.stringify(meta)}`;
           }
-          
+
           if (stack) {
             logMessage += `\n${stack}`;
           }
-          
+
           return logMessage;
         })
       ),

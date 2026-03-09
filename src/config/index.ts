@@ -56,6 +56,6 @@ export function validateConfig(): void {
   if (missing.length > 0) {
     throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
   }
-  
-  console.log('✅ Configuration validated successfully');
+
+  console.error('✅ Configuration validated successfully');
 }
