@@ -6,6 +6,7 @@
  */
 
 import { fileURLToPath } from 'url';
+import { realpathSync } from 'fs';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import {
@@ -166,7 +167,9 @@ async function main(): Promise<void> {
 
 // Start the server if this file is executed directly
 // Use proper path comparison for ESM modules to work across all environments (npx, npm, direct execution)
-const isMainModule = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+// Resolve both paths to handle symlinks (e.g., /tmp vs /private/tmp on macOS)
+const isMainModule = process.argv[1] &&
+  realpathSync(fileURLToPath(import.meta.url)) === realpathSync(process.argv[1]);
 
 if (isMainModule) {
   main().catch((error) => {
