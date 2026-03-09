@@ -9,6 +9,8 @@ import { V0Service } from '../services/v0Service.js';
 import { ContextPreparationService } from '../services/contextPreparationService.js';
 import { PrototypeGenerationService } from '../services/prototypeGenerationService.js';
 import { HandoffService } from '../services/handoffService.js';
+import { ProjectContextService } from '../services/projectContextService.js';
+import { IncrementPlanningService } from '../services/incrementPlanningService.js';
 import {
   PreparePrototypeContextSchema,
   PreparePrototypeContextInput,
@@ -16,6 +18,12 @@ import {
   GeneratePrototypeInput,
   HandoffToClaudeDevSchema,
   HandoffToClaudeDevInput,
+  LoadProjectContextSchema,
+  LoadProjectContextInput,
+  PlanIncrementSchema,
+  PlanIncrementInput,
+  UpdateProjectContextSchema,
+  UpdateProjectContextInput,
 } from '../types/index.js';
 import { logger, logToolCall } from '../utils/logger.js';
 import { ErrorHandler } from '../utils/errors.js';
@@ -25,12 +33,16 @@ export class V0Tools {
   private contextService: ContextPreparationService;
   private prototypeService: PrototypeGenerationService;
   private handoffService: HandoffService;
+  private projectContextService: ProjectContextService;
+  private incrementPlanningService: IncrementPlanningService;
 
   constructor() {
     this.v0Service = new V0Service();
     this.contextService = new ContextPreparationService();
     this.prototypeService = new PrototypeGenerationService();
     this.handoffService = new HandoffService();
+    this.projectContextService = new ProjectContextService();
+    this.incrementPlanningService = new IncrementPlanningService();
   }
 
   /**
@@ -185,6 +197,113 @@ export class V0Tools {
           required: ['prototype_id', 'prototype_result', 'prototype_context'],
         },
       },
+      {
+        name: 'load_project_context',
+        description: 'Load project context from a file for context-driven incremental development. Reads and validates project state including features, routes, components, and architectural patterns. This is step 1 in the MCP workflow.',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            context_path: {
+              type: 'string',
+              description: 'Path to the project context file (JSON format)',
+            },
+          },
+          required: ['context_path'],
+        },
+      },
+      {
+        name: 'plan_increment',
+        description: 'Plan how to implement a new feature based on project context. Analyzes existing features, determines generation scope, identifies reusable components, and creates an implementation strategy. This is step 2 in the MCP workflow (after load_project_context).',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            project_context: {
+              type: 'object',
+              description: 'Project context from load_project_context',
+              properties: {
+                product_name: { type: 'string' },
+                domain: { type: 'string' },
+                features: {
+                  type: 'object',
+                  properties: {
+                    done: { type: 'array', items: { type: 'string' } },
+                    in_progress: { type: 'array', items: { type: 'string' } },
+                    planned: { type: 'array', items: { type: 'string' } },
+                  },
+                },
+                routes: { type: 'array', items: { type: 'string' } },
+                layout: {
+                  type: 'object',
+                  properties: {
+                    dashboard_shell_exists: { type: 'boolean' },
+                    layout_patterns: { type: 'array', items: { type: 'string' } },
+                    page_patterns: { type: 'array', items: { type: 'string' } },
+                  },
+                },
+                reusable_components: { type: 'array', items: { type: 'string' } },
+                design_rules: { type: 'array', items: { type: 'string' } },
+                constraints: { type: 'array', items: { type: 'string' } },
+              },
+              required: ['product_name', 'domain', 'features', 'routes', 'layout', 'reusable_components', 'design_rules', 'constraints'],
+            },
+            feature_request: {
+              type: 'string',
+              description: 'Natural language description of the feature to implement (e.g., "Add Global Configuration page to dashboard")',
+            },
+          },
+          required: ['project_context', 'feature_request'],
+        },
+      },
+      {
+        name: 'update_project_context',
+        description: 'Update project context after implementing a feature. Marks features as done, adds new routes, registers new components, and records architectural patterns. This is step 5 in the MCP workflow (after handoff_to_claude_dev and implementation).',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            context_path: {
+              type: 'string',
+              description: 'Path to the project context file to update',
+            },
+            feature_update: {
+              type: 'object',
+              description: 'Feature update information',
+              properties: {
+                feature_name: {
+                  type: 'string',
+                  description: 'Name of the completed feature',
+                },
+                status: {
+                  type: 'string',
+                  enum: ['done'],
+                  description: 'Status of the feature (must be "done")',
+                },
+                routes_added: {
+                  type: 'array',
+                  items: { type: 'string' },
+                  description: 'New routes added for this feature',
+                },
+                components_added: {
+                  type: 'array',
+                  items: { type: 'string' },
+                  description: 'New reusable components created',
+                },
+                patterns_added: {
+                  type: 'array',
+                  items: { type: 'string' },
+                  description: 'New patterns or conventions established',
+                },
+                notes: {
+                  type: 'array',
+                  items: { type: 'string' },
+                  description: 'Additional notes about the implementation',
+                },
+              },
+              required: ['feature_name', 'status'],
+            },
+          },
+          required: ['context_path', 'feature_update'],
+        },
+      },
     ];
   }
 
@@ -217,6 +336,18 @@ export class V0Tools {
 
         case 'handoff_to_claude_dev':
           result = await this.handleHandoffToClaudeDev(arguments_);
+          break;
+
+        case 'load_project_context':
+          result = await this.handleLoadProjectContext(arguments_);
+          break;
+
+        case 'plan_increment':
+          result = await this.handlePlanIncrement(arguments_);
+          break;
+
+        case 'update_project_context':
+          result = await this.handleUpdateProjectContext(arguments_);
           break;
 
         default:
@@ -420,6 +551,92 @@ export class V0Tools {
       content: [{
         type: 'text',
         text: `${brief.summary}\n\n## Screens\n\n${screensSection}\n\n## Components\n\n${brief.components.length > 0 ? brief.components.slice(0, 20).join(', ') : 'No components detected'}${brief.components.length > 20 ? '...' : ''}\n\n## UX Patterns\n\n### Navigation Patterns\n${navPatternsText}\n\n### Screen Flows\n${screenFlowsText}\n\n### Interaction Patterns\n${interactionPatternsText}\n\n## Implementation Rules\n\n${rulesText}\n\n${brief.preview_reference ? `## Preview Reference\n\n${brief.preview_reference}\n\n` : ''}---\n\n**Next Steps for Claude Dev Agent:**\n1. Review the implementation rules above\n2. Preserve the V0-generated UI components\n3. Implement backend logic, API integration, and data handling\n4. Add validation, loading states, and error handling\n5. Implement authentication and authorization if needed\n6. Add tests for business logic and critical flows`,
+      }],
+    };
+  }
+
+  /**
+   * Handle load_project_context tool call (MCP Workflow Step 1)
+   */
+  private async handleLoadProjectContext(arguments_: unknown) {
+    const input = LoadProjectContextSchema.parse(arguments_) as LoadProjectContextInput;
+    const result = await this.projectContextService.loadProjectContext(input.context_path);
+
+    if (!result.success || !result.project_context) {
+      return {
+        content: [{
+          type: 'text',
+          text: `❌ Failed to Load Project Context\n\n**Error**: ${result.error}\n\nPlease check:\n1. The file path is correct\n2. The file exists and is readable\n3. The JSON structure is valid`,
+        }],
+      };
+    }
+
+    const ctx = result.project_context;
+    const totalFeatures = ctx.features.done.length + ctx.features.in_progress.length + ctx.features.planned.length;
+
+    return {
+      content: [{
+        type: 'text',
+        text: `✅ Project Context Loaded\n\n**Product**: ${ctx.product_name}\n**Domain**: ${ctx.domain}\n\n**Features**:\n  - Done: ${ctx.features.done.length}\n  - In Progress: ${ctx.features.in_progress.length}\n  - Planned: ${ctx.features.planned.length}\n  - Total: ${totalFeatures}\n\n**Infrastructure**:\n  - Dashboard Shell: ${ctx.layout.dashboard_shell_exists ? '✅ Yes' : '❌ No'}\n  - Routes: ${ctx.routes.length}\n  - Reusable Components: ${ctx.reusable_components.length}\n  - Layout Patterns: ${ctx.layout.layout_patterns.length}\n  - Page Patterns: ${ctx.layout.page_patterns.length}\n\n**Design Rules**: ${ctx.design_rules.length > 0 ? ctx.design_rules.join(', ') : 'None defined'}\n**Constraints**: ${ctx.constraints.length > 0 ? ctx.constraints.join(', ') : 'None defined'}\n\nNext: Use plan_increment to plan your next feature implementation.`,
+      }],
+    };
+  }
+
+  /**
+   * Handle plan_increment tool call (MCP Workflow Step 2)
+   */
+  private async handlePlanIncrement(arguments_: unknown) {
+    const input = PlanIncrementSchema.parse(arguments_) as PlanIncrementInput;
+    const result = await this.incrementPlanningService.planIncrement(
+      input.project_context,
+      input.feature_request
+    );
+
+    if (!result.success || !result.increment_plan) {
+      return {
+        content: [{
+          type: 'text',
+          text: `❌ Failed to Plan Increment\n\n**Error**: ${result.error}\n\nPlease check your feature request and try again.`,
+        }],
+      };
+    }
+
+    const plan = result.increment_plan;
+
+    return {
+      content: [{
+        type: 'text',
+        text: `✅ Increment Plan Created\n\n**Feature**: ${plan.feature_name}\n**Type**: ${plan.feature_type}\n**Generation Scope**: ${plan.generation_scope}\n\n**Base Reference**: ${plan.base_reference_feature || 'None (new pattern)'}\n\n**Expected Sections** (${plan.expected_sections.length}):\n${plan.expected_sections.map(s => `  - ${s}`).join('\n')}\n\n**Reusable Components** (${plan.reusable_components.length}):\n${plan.reusable_components.length > 0 ? plan.reusable_components.map(c => `  - ${c}`).join('\n') : '  - None available'}\n\n**New Components Expected** (${plan.new_components_expected.length}):\n${plan.new_components_expected.map(c => `  - ${c}`).join('\n')}\n\n**Constraints**:\n${plan.constraints.map(c => `  - ${c}`).join('\n')}\n\n**Generation Notes**:\n${plan.notes_for_generation.map(n => `  - ${n}`).join('\n')}\n\nNext: Use generate_prototype with this plan to create the UI prototype.`,
+      }],
+    };
+  }
+
+  /**
+   * Handle update_project_context tool call (MCP Workflow Step 5)
+   */
+  private async handleUpdateProjectContext(arguments_: unknown) {
+    const input = UpdateProjectContextSchema.parse(arguments_) as UpdateProjectContextInput;
+    const result = await this.projectContextService.updateProjectContext(
+      input.context_path,
+      input.feature_update
+    );
+
+    if (!result.success || !result.updated_context) {
+      return {
+        content: [{
+          type: 'text',
+          text: `❌ Failed to Update Project Context\n\n**Error**: ${result.error}\n\nPlease check:\n1. The context file path is correct\n2. The feature update information is valid\n3. The file is writable`,
+        }],
+      };
+    }
+
+    const ctx = result.updated_context;
+    const update = input.feature_update;
+
+    return {
+      content: [{
+        type: 'text',
+        text: `✅ Project Context Updated\n\n**Feature Completed**: ${update.feature_name}\n\n**Changes Applied**:\n  - Feature moved to "done" status\n  - Routes added: ${update.routes_added?.length || 0}\n  - Components added: ${update.components_added?.length || 0}\n  - Patterns added: ${update.patterns_added?.length || 0}\n\n**New Routes**:\n${update.routes_added && update.routes_added.length > 0 ? update.routes_added.map(r => `  - ${r}`).join('\n') : '  - None'}\n\n**New Components**:\n${update.components_added && update.components_added.length > 0 ? update.components_added.map(c => `  - ${c}`).join('\n') : '  - None'}\n\n**New Patterns**:\n${update.patterns_added && update.patterns_added.length > 0 ? update.patterns_added.map(p => `  - ${p}`).join('\n') : '  - None'}\n\n**Updated Project State**:\n  - Total Features Done: ${ctx.features.done.length}\n  - Total Routes: ${ctx.routes.length}\n  - Total Reusable Components: ${ctx.reusable_components.length}\n\nProject context has been updated and saved to: ${input.context_path}`,
       }],
     };
   }

@@ -1,0 +1,52 @@
+{
+  "product_name": "TaskMaster Pro",
+  "domain": "Project Management",
+  "features": {
+    "done": [
+      "Dashboard Overview",
+      "Brand Configuration"
+    ],
+    "in_progress": [
+      "Task List"
+    ],
+    "planned": [
+      "Global Configuration",
+      "User Management",
+      "Reports"
+    ]
+  },
+  "routes": [
+    "/dashboard",
+    "/dashboard/brand-configuration"
+  ],
+  "layout": {
+    "dashboard_shell_exists": true,
+    "layout_patterns": [
+      "Sidebar navigation with collapsible sections",
+      "Top header with search and user menu"
+    ],
+    "page_patterns": [
+      "Settings pages use ConfigSection + SaveBar pattern",
+      "List pages use FilterBar + DataTable + Pagination"
+    ]
+  },
+  "reusable_components": [
+    "ConfigSection",
+    "SaveBar",
+    "FilterBar",
+    "DataTable",
+    "Pagination",
+    "StatusBadge",
+    "ActionButton"
+  ],
+  "design_rules": [
+    "Use Tailwind CSS for styling",
+    "Follow shadcn/ui component patterns",
+    "Maintain consistent spacing with 4px grid"
+  ],
+  "constraints": [
+    "All pages must fit within existing dashboard shell",
+    "Reuse existing components where possible",
+    "Maintain visual consistency with Brand Configuration page"
+  ]
+}

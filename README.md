@@ -8,19 +8,55 @@ Vercel v0 MCP Server for Claude Code - Rapid multi-screen UI prototyping through
 
 ## 🎯 Overview
 
-**4 specialized tools** for AI-powered multi-screen prototype development:
+**Two powerful workflows for UI development:**
 
+### Prototype Workflow (4 tools)
 1. **v0_healthcheck** - Verify API connectivity
 2. **prepare_prototype_context** - Parse product descriptions into structured requirements
 3. **generate_prototype** - Generate complete multi-screen UI prototypes
 4. **handoff_to_claude_dev** - Create implementation briefs for developers
 
+### MCP Workflow (5 steps) - Context-Driven Incremental Development
+1. **load_project_context** - Load project state and architecture
+2. **plan_increment** - Plan feature implementation strategy
+3. **generate_prototype** - Generate UI based on project context (shared with Prototype Workflow)
+4. **handoff_to_claude_dev** - Create implementation briefs (shared with Prototype Workflow)
+5. **update_project_context** - Update project state after implementation
+
+The MCP Workflow enables incremental feature development with persistent project context, ensuring consistency across features.
+
 ### Key Features
-- 🚀 Multi-screen prototype generation with streaming progress
-- 📋 Automated developer handoff with UX patterns
+- 🚀 **Two workflows:** Prototype (4 steps) for new projects, MCP (5 steps) for incremental development
+- 📋 Multi-screen prototype generation with streaming progress
+- 🎯 Context-driven planning with pattern reuse and component tracking
 - 🔧 TypeScript + Zod validation + Winston logging
-- 🧪 Full test coverage with Jest
+- 🧪 Full test coverage with Jest (31 new tests for MCP workflow)
 - 🔌 Native MCP integration (Claude Code, Claude Desktop, Cursor)
+
+### Workflow Comparison at a Glance
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│  PROTOTYPE WORKFLOW (4 steps) - New Projects & Rapid Prototyping        │
+├──────────────────────────────────────────────────────────────────────────┤
+│  1. prepare_prototype_context  (parse description)                       │
+│  2. generate_prototype         (create UI)                               │
+│  3. handoff_to_claude_dev      (implementation brief)                    │
+│  4. [implement]                (Claude Dev builds it)                    │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│  MCP WORKFLOW (5 steps) - Existing Projects & Incremental Development   │
+├──────────────────────────────────────────────────────────────────────────┤
+│  1. load_project_context       (load existing state)                    │
+│  2. plan_increment             (analyze & plan based on patterns)       │
+│  3. generate_prototype         (create UI following patterns)           │
+│  4. handoff_to_claude_dev      (implementation brief)                   │
+│  5. update_project_context     (save feature & components)              │
+│     ↓                                                                    │
+│  [Ready for next feature with updated context]                          │
+└──────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -49,7 +85,299 @@ claude mcp add v0-platform-mcp --env V0_API_KEY=YOUR_KEY -- node $(pwd)/dist/mai
 
 ---
 
+## 🔄 MCP Workflow - Context-Driven Incremental Development
+
+The MCP Workflow enables incremental feature development with persistent project context. Instead of generating prototypes from scratch, it tracks your project state and plans each feature based on existing patterns.
+
+### Workflow Comparison
+
+| Aspect | Prototype Workflow (4 steps) | MCP Workflow (5 steps) |
+|--------|------------------------------|------------------------|
+| **Use Case** | New projects, rapid prototyping | Existing projects, incremental development |
+| **State** | Stateless (no memory) | Stateful (persistent context) |
+| **Input** | Natural language description | Project context + Feature request |
+| **Planning** | Infers screens from description | Analyzes existing patterns & references |
+| **Consistency** | No pattern enforcement | Follows existing patterns & reuses components |
+| **Context File** | ❌ Not used | ✅ Required (`project-context.json`) |
+| **Ideal For** | MVPs, proof-of-concepts | Production apps with multiple features |
+
+### When to Use MCP Workflow
+
+- ✅ Building features incrementally within an existing project
+- ✅ Need to maintain consistency with existing UI patterns
+- ✅ Want to reuse components across features
+- ✅ Track project state (features, routes, components)
+- ✅ Reference similar features for new implementations
+
+### 5-Step Workflow
+
+```
+┌─────────────────────────────────────────────────┐
+│  STEP 1: load_project_context                  │
+│  Load project state from context file          │
+└─────────────────────────────────────────────────┘
+                      ↓
+        Project State (features, routes, components)
+                      ↓
+┌─────────────────────────────────────────────────┐
+│  STEP 2: plan_increment                         │
+│  Plan feature based on existing patterns       │
+└─────────────────────────────────────────────────┘
+                      ↓
+        Increment Plan (scope, references, sections)
+                      ↓
+┌─────────────────────────────────────────────────┐
+│  STEP 3: generate_prototype                     │
+│  Generate UI using V0 API                       │
+└─────────────────────────────────────────────────┘
+                      ↓
+        UI Prototype (screens, components, preview)
+                      ↓
+┌─────────────────────────────────────────────────┐
+│  STEP 4: handoff_to_claude_dev                  │
+│  Create implementation brief                    │
+└─────────────────────────────────────────────────┘
+                      ↓
+        Implementation Brief → Claude Dev Implements
+                      ↓
+┌─────────────────────────────────────────────────┐
+│  STEP 5: update_project_context                 │
+│  Mark feature done, add routes/components       │
+└─────────────────────────────────────────────────┘
+                      ↓
+        Updated Context → Ready for next feature
+```
+
+### Complete 5-Step Implementation Guide
+
+#### 📋 Step 1: Load Project Context
+
+```
+Use load_project_context with context_path "project-context.json"
+```
+
+**Returns:**
+```
+✅ Project Context Loaded
+
+Product: TaskMaster Pro
+Domain: Project Management
+
+Features:
+  - Done: 2
+  - In Progress: 1
+  - Planned: 2
+
+Infrastructure:
+  - Dashboard Shell: ✅ Yes
+  - Routes: 2
+  - Reusable Components: 7
+```
+
+#### 🎯 Step 2: Plan Increment
+
+```
+Use plan_increment with the loaded project_context and feature_request "Add Global Configuration page to dashboard"
+```
+
+**Returns:**
+```
+✅ Increment Plan Created
+
+Feature: Global Configuration
+Type: page
+Generation Scope: content_only
+
+Base Reference: Brand Configuration (similar feature found!)
+
+Expected Sections (3):
+  - General Settings
+  - Advanced Options
+  - Save Actions
+
+Reusable Components (2):
+  - ConfigSection
+  - SaveBar
+
+New Components Expected (3):
+  - GeneralSettingsSection
+  - AdvancedOptionsSection
+  - SaveActionsSection
+
+Constraints:
+  - Do not regenerate dashboard shell
+  - Only generate page content
+  - Follow layout pattern from: Brand Configuration
+  - All pages must fit within dashboard shell
+
+Generation Notes:
+  - Similar feature exists: Brand Configuration
+  - Reuse layout and component patterns from reference feature
+  - Generation scope: content_only
+  - Apply design rules: Use Tailwind CSS, Follow shadcn/ui patterns
+  - Add appropriate route for this page
+```
+
+#### 🎨 Step 3: Generate Prototype
+
+Use the increment plan from Step 2 to construct the prototype context, then generate the UI:
+
+```
+Use generate_prototype with prototype_context derived from increment plan
+```
+
+This generates the UI screens and components using V0 API, following the patterns and constraints from your project context.
+
+**Returns:**
+```
+✅ Prototype Generated Successfully
+
+Prototype ID: proto_1234567890
+Platform: web
+Screens Generated: 3/3
+
+Generated Screens:
+  - global-configuration
+  - settings-form
+  - advanced-options
+
+Components (8): ConfigSection, SaveBar, FormInput...
+
+Preview: https://v0.dev/t/xyz123
+```
+
+#### 📝 Step 4: Handoff to Claude Dev
+
+Create an implementation brief from the generated prototype:
+
+```
+Use handoff_to_claude_dev with prototype_id, prototype_result, and prototype_context
+```
+
+This converts the V0 prototype into a structured implementation brief with UX patterns, component descriptions, and implementation rules.
+
+**Returns:**
+```
+# Global Configuration - Implementation Brief
+
+Screens: global-configuration, settings-form, advanced-options
+
+UX Patterns:
+- Settings layout with sidebar navigation
+- Form validation with inline errors
+- Save confirmation with toast notifications
+
+Implementation Rules:
+- PRESERVE V0-generated UI components
+- Implement backend API integration
+- Add form validation and error handling
+- Add authentication checks
+- Write tests for business logic
+```
+
+#### 💾 Step 5: Update Project Context
+
+After implementing the feature:
+
+```
+Use update_project_context with context_path "project-context.json" and feature_update:
+{
+  feature_name: "Global Configuration",
+  status: "done",
+  routes_added: ["/dashboard/global-configuration"],
+  components_added: ["ConfigSection", "SaveBar"],
+  patterns_added: ["Settings pages use ConfigSection + SaveBar pattern"],
+  notes: ["Reuses Brand Configuration layout"]
+}
+```
+
+**Returns:**
+```
+✅ Project Context Updated
+
+Feature Completed: Global Configuration
+
+Changes Applied:
+  - Feature moved to "done" status
+  - Routes added: 1
+  - Components added: 2
+  - Patterns added: 1
+
+New Routes:
+  - /dashboard/global-configuration
+
+Updated Project State:
+  - Total Features Done: 3
+  - Total Routes: 3
+  - Total Reusable Components: 9
+```
+
+### Project Context File Format
+
+Create a `project-context.json` file:
+
+```json
+{
+  "product_name": "TaskMaster Pro",
+  "domain": "Project Management",
+  "features": {
+    "done": ["Dashboard Overview", "Brand Configuration"],
+    "in_progress": ["Task List"],
+    "planned": ["Global Configuration", "User Management"]
+  },
+  "routes": [
+    "/dashboard",
+    "/dashboard/brand-configuration"
+  ],
+  "layout": {
+    "dashboard_shell_exists": true,
+    "layout_patterns": [
+      "Sidebar navigation with collapsible sections"
+    ],
+    "page_patterns": [
+      "Settings pages use ConfigSection + SaveBar pattern"
+    ]
+  },
+  "reusable_components": [
+    "ConfigSection",
+    "SaveBar",
+    "DataTable"
+  ],
+  "design_rules": [
+    "Use Tailwind CSS for styling",
+    "Follow shadcn/ui component patterns"
+  ],
+  "constraints": [
+    "All pages must fit within existing dashboard shell"
+  ]
+}
+```
+
+See `examples/sample-project-context.json` for a complete example.
+
+### 🎯 Quick Reference: 5-Step MCP Workflow
+
+| Step | Tool | Input | Output |
+|------|------|-------|--------|
+| **1** | `load_project_context` | Context file path | Project state summary |
+| **2** | `plan_increment` | Project context + Feature request | Increment plan with scope & references |
+| **3** | `generate_prototype` | Prototype context (from plan) | UI prototype with screens & components |
+| **4** | `handoff_to_claude_dev` | Prototype + Context | Implementation brief with UX patterns |
+| **5** | `update_project_context` | Context path + Feature update | Updated project state |
+
+### Key Benefits
+
+1. **Consistency** - New features follow existing patterns
+2. **Efficiency** - Reuse components instead of recreating
+3. **Context-Aware** - Plans consider what already exists
+4. **Incremental** - Build one feature at a time
+5. **Trackable** - Project state persists across features
+
+---
+
 ## 🔧 All Tools Reference
+
+### Prototype Workflow Tools
 
 | # | Tool | Purpose | Use Case |
 |---|------|---------|----------|
@@ -57,6 +385,16 @@ claude mcp add v0-platform-mcp --env V0_API_KEY=YOUR_KEY -- node $(pwd)/dist/mai
 | **2** | **prepare_prototype_context** | Parse product description | Extract screens, platform, goals |
 | **3** | **generate_prototype** | Generate multi-screen prototype | Create all screens in one call |
 | **4** | **handoff_to_claude_dev** | Create implementation brief | Developer handoff with UX patterns |
+
+### MCP Workflow Tools (5-Step Process)
+
+| Step | Tool | Purpose | Use Case |
+|------|------|---------|----------|
+| **Step 1** | **load_project_context** | Load project state | Read context file with features, routes, components |
+| **Step 2** | **plan_increment** | Plan feature implementation | Analyze context, find references, determine scope |
+| **Step 3** | **generate_prototype** | Generate UI prototype | Create screens based on increment plan (shared with Prototype Workflow) |
+| **Step 4** | **handoff_to_claude_dev** | Create implementation brief | Convert prototype to dev tasks (shared with Prototype Workflow) |
+| **Step 5** | **update_project_context** | Update project state | Mark feature done, add routes/components |
 
 ---
 

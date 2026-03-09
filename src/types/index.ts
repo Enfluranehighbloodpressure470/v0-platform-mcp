@@ -169,3 +169,89 @@ export const ImplementationBriefSchema = z.object({
 
 export type HandoffToClaudeDevInput = z.infer<typeof HandoffToClaudeDevSchema>;
 export type ImplementationBrief = z.infer<typeof ImplementationBriefSchema>;
+
+// MCP Workflow Types - Context-driven incremental development
+export const FeatureStatusSchema = z.enum(['done', 'in_progress', 'planned']);
+export type FeatureStatus = z.infer<typeof FeatureStatusSchema>;
+
+export const ProjectContextSchema = z.object({
+  product_name: z.string(),
+  domain: z.string(),
+  features: z.object({
+    done: z.array(z.string()),
+    in_progress: z.array(z.string()),
+    planned: z.array(z.string()),
+  }),
+  routes: z.array(z.string()),
+  layout: z.object({
+    dashboard_shell_exists: z.boolean(),
+    layout_patterns: z.array(z.string()),
+    page_patterns: z.array(z.string()),
+  }),
+  reusable_components: z.array(z.string()),
+  design_rules: z.array(z.string()),
+  constraints: z.array(z.string()),
+});
+
+export const LoadProjectContextSchema = z.object({
+  context_path: z.string().min(1, 'Context path is required'),
+});
+
+export const ProjectContextResultSchema = z.object({
+  success: z.boolean(),
+  project_context: ProjectContextSchema.optional(),
+  error: z.string().optional(),
+});
+
+export const IncrementPlanSchema = z.object({
+  feature_name: z.string(),
+  feature_type: z.enum(['page', 'module', 'component']),
+  base_reference_feature: z.string().optional(),
+  generation_scope: z.enum(['full_page', 'content_only', 'section_only']),
+  expected_sections: z.array(z.string()),
+  reusable_components: z.array(z.string()),
+  new_components_expected: z.array(z.string()),
+  constraints: z.array(z.string()),
+  notes_for_generation: z.array(z.string()),
+});
+
+export const PlanIncrementSchema = z.object({
+  project_context: ProjectContextSchema,
+  feature_request: z.string().min(1, 'Feature request is required'),
+});
+
+export const IncrementPlanResultSchema = z.object({
+  success: z.boolean(),
+  increment_plan: IncrementPlanSchema.optional(),
+  error: z.string().optional(),
+});
+
+export const FeatureUpdateSchema = z.object({
+  feature_name: z.string().min(1, 'Feature name is required'),
+  status: z.literal('done'),
+  routes_added: z.array(z.string()).optional(),
+  components_added: z.array(z.string()).optional(),
+  patterns_added: z.array(z.string()).optional(),
+  notes: z.array(z.string()).optional(),
+});
+
+export const UpdateProjectContextSchema = z.object({
+  context_path: z.string().min(1, 'Context path is required'),
+  feature_update: FeatureUpdateSchema,
+});
+
+export const UpdateProjectContextResultSchema = z.object({
+  success: z.boolean(),
+  updated_context: ProjectContextSchema.optional(),
+  error: z.string().optional(),
+});
+
+export type ProjectContext = z.infer<typeof ProjectContextSchema>;
+export type LoadProjectContextInput = z.infer<typeof LoadProjectContextSchema>;
+export type ProjectContextResult = z.infer<typeof ProjectContextResultSchema>;
+export type IncrementPlan = z.infer<typeof IncrementPlanSchema>;
+export type PlanIncrementInput = z.infer<typeof PlanIncrementSchema>;
+export type IncrementPlanResult = z.infer<typeof IncrementPlanResultSchema>;
+export type FeatureUpdate = z.infer<typeof FeatureUpdateSchema>;
+export type UpdateProjectContextInput = z.infer<typeof UpdateProjectContextSchema>;
+export type UpdateProjectContextResult = z.infer<typeof UpdateProjectContextResultSchema>;
