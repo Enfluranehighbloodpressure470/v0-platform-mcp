@@ -1,0 +1,78 @@
+sequenceDiagram
+    participant User
+    participant Claude as Claude Code
+    participant Load as load_project_context
+    participant Plan as plan_increment
+    participant Proto as generate_prototype
+    participant Handoff as handoff_to_claude_dev
+    participant Update as update_project_context
+    participant FS as File System
+    participant V0 as v0 API
+
+    Note over User,V0: MCP Workflow (5 Steps) - Incremental Development
+
+    rect rgb(240, 248, 255)
+        Note over User,Load: Step 1: Load Project Context
+        User->>Claude: Load project context
+        Claude->>Load: load_project_context(context_path)
+        Load->>FS: Read project-context.json
+        FS-->>Load: Context data<br/>(features, routes, components)
+        Load->>Load: Validate & parse context
+        Load-->>Claude: ✅ Context loaded<br/>(features, routes, patterns)
+        Claude-->>User: Show project summary
+    end
+
+    rect rgb(255, 250, 240)
+        Note over User,Plan: Step 2: Plan Increment
+        User->>Claude: "Add Global Configuration page"
+        Claude->>Plan: plan_increment(project_context, feature_request)
+        Plan->>Plan: Analyze existing patterns
+        Plan->>Plan: Find similar features
+        Plan->>Plan: Determine generation scope<br/>(full_app vs content_only)
+        Plan->>Plan: Identify reusable components
+        Plan-->>Claude: ✅ Increment plan<br/>(scope, references, sections)
+        Claude-->>User: Show plan with references
+    end
+
+    rect rgb(240, 255, 240)
+        Note over User,Proto: Step 3: Generate Prototype
+        User->>Claude: Generate from plan
+        Claude->>Proto: generate_prototype(context from plan)
+        Proto->>V0: POST /prototype with context
+
+        loop For each screen
+            V0-->>Proto: Stream progress
+            Proto-->>Claude: Update progress
+            Claude-->>User: Screen N/M generated
+        end
+
+        V0-->>Proto: Complete prototype
+        Proto-->>Claude: ✅ Prototype done<br/>(screens, components, preview)
+        Claude-->>User: Show preview link
+    end
+
+    rect rgb(255, 240, 245)
+        Note over User,Handoff: Step 4: Implementation Brief
+        User->>Claude: Create implementation brief
+        Claude->>Handoff: handoff_to_claude_dev(prototype_id, result, context)
+        Handoff->>Handoff: Extract UX patterns<br/>Component list<br/>Implementation rules
+        Handoff-->>Claude: ✅ Brief created
+        Claude-->>User: Show implementation brief
+    end
+
+    Note over User,Update: [Claude Dev implements the feature]
+
+    rect rgb(250, 240, 255)
+        Note over User,Update: Step 5: Update Project Context
+        User->>Claude: Feature implemented, update context
+        Claude->>Update: update_project_context(context_path, feature_update)
+        Update->>FS: Read current context
+        FS-->>Update: Current context
+        Update->>Update: Mark feature as done<br/>Add routes<br/>Add components<br/>Add patterns
+        Update->>FS: Write updated context
+        FS-->>Update: Saved
+        Update-->>Claude: ✅ Context updated<br/>(new routes, components)
+        Claude-->>User: Show updated project state
+    end
+
+    Note over User,V0: Ready for next feature (context preserved)

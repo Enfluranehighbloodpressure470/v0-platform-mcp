@@ -1,0 +1,61 @@
+flowchart TD
+    Start([User Request])
+
+    Start --> Choice{Workflow Type?}
+
+    %% Prototype Workflow Branch
+    Choice -->|New Project| P1[Natural Language<br/>Description]
+    P1 --> P2[prepare_prototype_context]
+    P2 --> P3{Parse Success?}
+    P3 -->|No| P4[Return Error<br/>with Suggestions]
+    P3 -->|Yes| P5[Structured Context<br/>product, platform, screens]
+
+    %% MCP Workflow Branch
+    Choice -->|Existing Project| M1[Load Project Context]
+    M1 --> M2{Context Exists?}
+    M2 -->|No| M3[Return Error<br/>Create context first]
+    M2 -->|Yes| M4[Project State Loaded<br/>features, routes, components]
+    M4 --> M5[Feature Request<br/>+ Context]
+    M5 --> M6[plan_increment]
+    M6 --> M7[Increment Plan<br/>scope, references, patterns]
+
+    %% Convergence Point
+    P5 --> Gen[generate_prototype]
+    M7 --> Gen
+
+    Gen --> V0[Send to v0 API]
+    V0 --> Stream{Streaming?}
+    Stream -->|Yes| Progress[Stream Progress<br/>Updates]
+    Stream -->|No| Direct[Direct Response]
+    Progress --> Proto[Prototype Result]
+    Direct --> Proto
+
+    Proto --> Check{Success?}
+    Check -->|No| Error[Return Error<br/>with Details]
+    Check -->|Yes| Result[Screens + Components<br/>+ Preview URL]
+
+    Result --> Handoff[handoff_to_claude_dev]
+    Handoff --> Brief[Implementation Brief<br/>UX patterns, rules]
+
+    Brief --> Impl{Workflow Type?}
+
+    %% Prototype Workflow End
+    Impl -->|Prototype| PEnd([Ready for<br/>Implementation])
+
+    %% MCP Workflow Continue
+    Impl -->|MCP| Dev[Claude Dev<br/>Implements Feature]
+    Dev --> Update[update_project_context]
+    Update --> Save[Save to<br/>project-context.json]
+    Save --> MEnd([Ready for<br/>Next Feature])
+
+    %% Error Handling
+    P4 --> End1([End])
+    M3 --> End2([End])
+    Error --> End3([End])
+
+    style Start fill:#4A90E2
+    style PEnd fill:#50C878
+    style MEnd fill:#50C878
+    style Error fill:#FF6B6B
+    style P4 fill:#FF6B6B
+    style M3 fill:#FF6B6B

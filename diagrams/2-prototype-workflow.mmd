@@ -1,0 +1,57 @@
+sequenceDiagram
+    participant User
+    participant Claude as Claude Code
+    participant Health as v0_healthcheck
+    participant Context as prepare_prototype_context
+    participant Proto as generate_prototype
+    participant Handoff as handoff_to_claude_dev
+    participant V0 as v0 API
+
+    Note over User,V0: Prototype Workflow (4 Steps)
+
+    rect rgb(240, 248, 255)
+        Note over User,Health: Optional: Verify API
+        User->>Claude: Check API status
+        Claude->>Health: v0_healthcheck()
+        Health->>V0: Test connection
+        V0-->>Health: API status
+        Health-->>Claude: ✅ Connection OK
+        Claude-->>User: API verified
+    end
+
+    rect rgb(255, 250, 240)
+        Note over User,Context: Step 1: Parse Requirements
+        User->>Claude: "Build TaskMaster with dashboard, task list, settings"
+        Claude->>Context: prepare_prototype_context(description, images?)
+        Context->>Context: Parse screens, platform, goals
+        Context-->>Claude: ✅ Context prepared<br/>(product, platform, screens)
+        Claude-->>User: Show parsed context
+    end
+
+    rect rgb(240, 255, 240)
+        Note over User,Proto: Step 2: Generate Prototype
+        User->>Claude: Generate prototype
+        Claude->>Proto: generate_prototype(context, model, streaming)
+        Proto->>V0: POST /prototype with screens
+
+        loop For each screen
+            V0-->>Proto: Stream progress
+            Proto-->>Claude: Update progress
+            Claude-->>User: Screen N/M generated
+        end
+
+        V0-->>Proto: Complete prototype
+        Proto-->>Claude: ✅ Prototype done<br/>(screens, components, preview)
+        Claude-->>User: Show preview link
+    end
+
+    rect rgb(255, 240, 245)
+        Note over User,Handoff: Step 3: Implementation Brief
+        User->>Claude: Create implementation brief
+        Claude->>Handoff: handoff_to_claude_dev(prototype_id, result, context)
+        Handoff->>Handoff: Extract UX patterns<br/>Component list<br/>Implementation rules
+        Handoff-->>Claude: ✅ Brief created<br/>(patterns, rules, components)
+        Claude-->>User: Show implementation brief
+    end
+
+    Note over User,V0: Ready for Implementation by Claude Dev

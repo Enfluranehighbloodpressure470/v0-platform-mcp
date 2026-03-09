@@ -1,0 +1,70 @@
+graph TB
+    subgraph "Tool Layer"
+        T1[v0_healthcheck]
+        T2[prepare_prototype_context]
+        T3[generate_prototype]
+        T4[handoff_to_claude_dev]
+        T5[load_project_context]
+        T6[plan_increment]
+        T7[update_project_context]
+    end
+
+    subgraph "Service Layer"
+        CS[ContextService<br/>Parse & validate context]
+        PS[PrototypeService<br/>Generate prototypes via v0]
+        HS[HandoffService<br/>Create implementation briefs]
+        PLS[PlanService<br/>Plan incremental features]
+        UPS[UpdateService<br/>Update project state]
+    end
+
+    subgraph "Core Infrastructure"
+        CFG[ConfigManager<br/>Environment & settings]
+        LOG[Logger<br/>Winston logging]
+        VAL[Validator<br/>Zod schemas]
+    end
+
+    subgraph "External"
+        V0[v0 API Client]
+        FS[FileSystem<br/>project-context.json]
+    end
+
+    T1 --> CFG
+    T2 --> CS
+    T3 --> PS
+    T4 --> HS
+    T5 --> CS
+    T6 --> PLS
+    T7 --> UPS
+
+    CS --> VAL
+    CS --> LOG
+    CS --> FS
+
+    PS --> V0
+    PS --> VAL
+    PS --> LOG
+
+    HS --> VAL
+    HS --> LOG
+
+    PLS --> CS
+    PLS --> VAL
+    PLS --> LOG
+    PLS --> FS
+
+    UPS --> CS
+    UPS --> VAL
+    UPS --> LOG
+    UPS --> FS
+
+    CFG --> LOG
+    V0 --> CFG
+    V0 --> LOG
+
+    style CS fill:#E8F4F8
+    style PS fill:#E8F4F8
+    style HS fill:#E8F4F8
+    style PLS fill:#E8F4F8
+    style UPS fill:#E8F4F8
+    style V0 fill:#50C878
+    style FS fill:#FFD700

@@ -58,6 +58,17 @@ The MCP Workflow enables incremental feature development with persistent project
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
+### Visual Workflow Diagrams
+
+#### Prototype Workflow (4 Steps)
+![Prototype Workflow](diagrams/2-prototype-workflow.svg)
+
+#### MCP Workflow (5 Steps)
+![MCP Workflow](diagrams/3-mcp-workflow.svg)
+
+#### Complete Data Flow
+![Data Flow](diagrams/5-data-flow.svg)
+
 ---
 
 ## 🚀 Quick Start
@@ -704,22 +715,26 @@ Natural Language Description
 
 ## 🎯 Architecture
 
-```
-┌─────────────────────────────────────────────┐
-│         v0-platform-mcp Server               │
-├─────────────────────────────────────────────┤
-│                                             │
-│  Tools                                      │
-│  ├─ v0_healthcheck        (API check)      │
-│  ├─ ContextService        (Step 1)         │
-│  ├─ PrototypeService      (Step 2)         │
-│  └─ HandoffService        (Step 3)         │
-│                                             │
-│  ↓ MCP Protocol                             │
-│                                             │
-│  Claude Code / Claude Desktop / Cursor      │
-└─────────────────────────────────────────────┘
-```
+### System Architecture
+
+![System Architecture](diagrams/1-system-architecture.svg)
+
+The v0-platform-mcp server follows a layered architecture:
+- **Client Layer**: Claude Code, Claude Desktop, and Cursor IDE communicate via MCP Protocol
+- **Tool Layer**: 7 tools exposed through MCP (healthcheck, context preparation, generation, handoff, project loading, planning, updating)
+- **Service Layer**: Core business logic (ContextService, PrototypeService, HandoffService, PlanService, UpdateService)
+- **Infrastructure**: Configuration management, logging (Winston), validation (Zod)
+- **External Services**: v0 API for prototype generation, File System for project context persistence
+
+### Component Interactions
+
+![Component Interaction](diagrams/4-component-interaction.svg)
+
+Each tool delegates to specialized services:
+- **Tools** handle MCP protocol communication and parameter validation
+- **Services** contain business logic and orchestrate operations
+- **Infrastructure** provides cross-cutting concerns (logging, validation, configuration)
+- **External integrations** manage API calls and file I/O
 
 ---
 

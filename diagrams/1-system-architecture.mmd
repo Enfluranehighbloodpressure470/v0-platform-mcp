@@ -1,0 +1,72 @@
+graph TB
+    subgraph "Client Layer"
+        CC[Claude Code]
+        CD[Claude Desktop]
+        CR[Cursor IDE]
+    end
+
+    subgraph "v0-platform-mcp Server"
+        MCP[MCP Protocol Handler]
+
+        subgraph "Core Services"
+            CS[ContextService]
+            PS[PrototypeService]
+            HS[HandoffService]
+            PLS[PlanService]
+            UPS[UpdateService]
+        end
+
+        subgraph "Tools"
+            T1[v0_healthcheck]
+            T2[prepare_prototype_context]
+            T3[generate_prototype]
+            T4[handoff_to_claude_dev]
+            T5[load_project_context]
+            T6[plan_increment]
+            T7[update_project_context]
+        end
+
+        CONFIG[Config Manager]
+        LOG[Logger]
+    end
+
+    subgraph "External Services"
+        V0[v0 API]
+        FS[File System<br/>project-context.json]
+    end
+
+    CC --> MCP
+    CD --> MCP
+    CR --> MCP
+
+    MCP --> T1
+    MCP --> T2
+    MCP --> T3
+    MCP --> T4
+    MCP --> T5
+    MCP --> T6
+    MCP --> T7
+
+    T1 --> CONFIG
+    T2 --> CS
+    T3 --> PS
+    T4 --> HS
+    T5 --> CS
+    T6 --> PLS
+    T7 --> UPS
+
+    CS --> FS
+    PS --> V0
+    PLS --> FS
+    UPS --> FS
+
+    CONFIG --> LOG
+    CS --> LOG
+    PS --> LOG
+    HS --> LOG
+
+    style CC fill:#4A90E2
+    style CD fill:#4A90E2
+    style CR fill:#4A90E2
+    style V0 fill:#50C878
+    style FS fill:#FFD700
